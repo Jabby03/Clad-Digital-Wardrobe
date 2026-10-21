@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -99,18 +99,13 @@ export default function LoginScreen() {
     HankenGrotesk_600SemiBold,
     HankenGrotesk_700Bold,
   });
-  const [hasHydrated, setHasHydrated] = useState(false);
-
-  useEffect(() => {
-    setHasHydrated(true);
-  }, []);
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [emailFocused, setEmailFocused] = useState<boolean>(false);
   const [passFocused, setPassFocused] = useState<boolean>(false);
-  if (!hasHydrated || !fontsLoaded) {
+  if (!fontsLoaded) {
     return (
       <View style={[styles.root, styles.center]}>
         <ActivityIndicator color={colors.primary} />
@@ -169,7 +164,6 @@ export default function LoginScreen() {
             <View style={styles.monogramCircle}>
               <Image source={{ uri: LOGO_URI }} style={styles.monogram} resizeMode="contain" />
             </View>
-            <Text style={styles.brand}>CLAD</Text>
             <Text style={styles.tagline}>WEAR IT, CLAD IT.</Text>
             <Text style={styles.heroTitle}>Sign In to Your Wardrobe</Text>
             <Text style={styles.heroSub}>
@@ -191,6 +185,8 @@ export default function LoginScreen() {
                   onChangeText={setEmail}
                   onFocus={() => setEmailFocused(true)}
                   onBlur={() => setEmailFocused(false)}
+                  placeholder="alex.morgan@icloud.com"
+                  placeholderTextColor={colors.outline}
                   keyboardType="email-address"
                   autoCapitalize="none"
                   autoComplete="email"
@@ -218,6 +214,8 @@ export default function LoginScreen() {
                   onChangeText={setPassword}
                   onFocus={() => setPassFocused(true)}
                   onBlur={() => setPassFocused(false)}
+                  placeholder="••••••••••••"
+                  placeholderTextColor={colors.outline}
                   secureTextEntry={!showPassword}
                   autoCapitalize="none"
                   autoComplete="password"
