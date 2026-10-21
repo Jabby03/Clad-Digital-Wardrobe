@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   Pressable,
-  Image,
   Alert,
   ScrollView,
   StyleSheet,
@@ -38,9 +37,6 @@ const colors = {
   blue400: '#60a5fa',
   blue300: '#93c5fd',
 } as const;
-
-const LOGO_URI =
-  'https://lh3.googleusercontent.com/aida/AEtjO1VbUPms0d7KXY0PetALJOefXZUYlk1_hJAfYE43XsTacI1Bxl0fQ2rJnNoiI6OU2IxoEhb5hZTmVjHjiBxgQafUlLfQL9E2RYzA3796KnZJmAAFZTrKy1nHFse1ynIy8Etx7RzAvRXl9RgxvqQVkbDH81ysVISstfWc3eunCl8reU7UI42h6gTxyTRxPsoemoGe8Ls5OMjgSvg0gPUri86lf7M-QU5185bwK_Eq_A22N2JlgjHjpZBgpFtK';
 
 const font = {
   regular: 'HankenGrotesk_400Regular',
@@ -105,6 +101,7 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [emailFocused, setEmailFocused] = useState<boolean>(false);
   const [passFocused, setPassFocused] = useState<boolean>(false);
+  const [formError, setFormError] = useState<string | null>(null);
   if (!fontsLoaded) {
     return (
       <View style={[styles.root, styles.center]}>
@@ -118,11 +115,18 @@ export default function LoginScreen() {
   };
 
   const handleSubmit = () => {
-    if (!email.trim() || !password) {
-      Alert.alert('Missing details', 'Enter your email address and password to continue.');
+    const normalizedEmail = email.trim();
+    if (!normalizedEmail || !password) {
+      setFormError('Enter your email address and password to continue.');
       return;
     }
-    Alert.alert('Sign-in unavailable', 'Connect an authentication service to sign in.');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+      setFormError('Enter a valid email address.');
+      return;
+    }
+
+    setFormError(null);
+    router.replace('/dashboard');
   };
 
   const showAuthUnavailable = () => {
@@ -142,8 +146,7 @@ export default function LoginScreen() {
             >
               <Ionicons name="chevron-back" size={22} color={colors.onSurface} />
             </Pressable>
-            <Image source={{ uri: LOGO_URI }} style={styles.headerLogo} resizeMode="contain" />
-            <Text style={styles.headerTitle}>Clad</Text>
+            <Text style={styles.headerTitle}>CLAD</Text>
           </View>
           <View style={styles.avatar}>
             <Ionicons name="person-outline" size={18} color={colors.onPrimary} />
@@ -162,8 +165,9 @@ export default function LoginScreen() {
           {/* Hero */}
           <View style={styles.hero}>
             <View style={styles.monogramCircle}>
-              <Image source={{ uri: LOGO_URI }} style={styles.monogram} resizeMode="contain" />
+              <Text style={styles.monogramText}>C</Text>
             </View>
+            <Text style={styles.brand}>CLAD</Text>
             <Text style={styles.tagline}>WEAR IT, CLAD IT.</Text>
             <Text style={styles.heroTitle}>Sign In to Your Wardrobe</Text>
             <Text style={styles.heroSub}>
@@ -185,7 +189,7 @@ export default function LoginScreen() {
                   onChangeText={setEmail}
                   onFocus={() => setEmailFocused(true)}
                   onBlur={() => setEmailFocused(false)}
-                  placeholder="alex.morgan@icloud.com"
+                  placeholder="Enter your email address"
                   placeholderTextColor={colors.outline}
                   keyboardType="email-address"
                   autoCapitalize="none"
@@ -214,7 +218,7 @@ export default function LoginScreen() {
                   onChangeText={setPassword}
                   onFocus={() => setPassFocused(true)}
                   onBlur={() => setPassFocused(false)}
-                  placeholder="••••••••••••"
+                  placeholder="Enter your password"
                   placeholderTextColor={colors.outline}
                   secureTextEntry={!showPassword}
                   autoCapitalize="none"
@@ -241,7 +245,7 @@ export default function LoginScreen() {
                 onPress={handleSubmit}
                 style={({ pressed }) => [styles.cta, pressed && styles.pressedScale]}
               >
-                <Text style={styles.ctaText}>Enter Wardrobe</Text>
+                <Text style={styles.ctaText}>Enter</Text>
                 <MaterialIcons name="arrow-forward" size={18} color={colors.onPrimary} />
               </Pressable>
               <Pressable
@@ -252,6 +256,7 @@ export default function LoginScreen() {
                 <MaterialIcons name="face" size={26} color={colors.blue400} />
               </Pressable>
             </View>
+            {formError && <Text accessibilityRole="alert" style={styles.formError}>{formError}</Text>}
           </View>
 
           <View style={styles.chip}>
@@ -328,7 +333,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  headerLogo: { height: 32, width: 32 },
   headerTitle: {
     fontFamily: font.semibold,
     fontSize: 17,
@@ -364,7 +368,11 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 8,
   },
-  monogram: { width: 48, height: 48 },
+  monogramText: {
+    fontFamily: font.bold,
+    fontSize: 44,
+    color: colors.primary,
+  },
   brand: {
     marginTop: 16,
     fontFamily: font.bold,
@@ -451,6 +459,13 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   ctaText: { fontFamily: font.semibold, fontSize: 17, color: colors.onPrimary },
+  formError: {
+    marginTop: -8,
+    color: '#fca5a5',
+    fontFamily: font.medium,
+    fontSize: 13,
+    textAlign: 'center',
+  },
   faceBtn: {
     width: 56,
     height: 56,
