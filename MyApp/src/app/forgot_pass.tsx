@@ -67,7 +67,7 @@ export default function ForgotPasswordScreen() {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [sentTo, setSentTo] = useState<string | null>(null);
 
-  const pulse = useRef(new Animated.Value(1)).current;
+  const [pulse] = useState(() => new Animated.Value(1));
   const submitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Soft pulse on the badge (mirrors animate-pulse)
@@ -407,7 +407,7 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   badgePulse: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     borderRadius: 32,
     backgroundColor: 'rgba(0,0,0,0.05)',
   },

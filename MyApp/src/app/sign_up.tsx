@@ -129,7 +129,7 @@ export default function SignupScreen() {
   }
 
   const strength = getStrength(password);
-  const strengthMeta = strength > 0 ? STRENGTH[strength] : null;
+  const strengthMeta = strength === 0 ? null : STRENGTH[strength];
 
   const handleSubmit = () => {
     const normalizedName = name.trim();
@@ -316,7 +316,7 @@ export default function SignupScreen() {
                 {acceptedTerms && <MaterialIcons name="check" size={16} color={colors.onPrimary} />}
               </Pressable>
               <Text style={styles.termsText}>
-                By registering, you agree to Clad's{' '}
+                By registering, you agree to Clad&apos;s{' '}
                 <Text style={styles.termsLink} onPress={showAuthUnavailable}>
                   Terms of Service
                 </Text>{' '}

@@ -14,6 +14,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useHydrated } from '@/hooks/use-hydrated';
 import {
   HankenGrotesk_400Regular,
   HankenGrotesk_500Medium,
@@ -96,7 +97,7 @@ const emptyData: DashboardData = {
 };
 
 // Sample content from the design mockup, for previewing the populated layout.
-const demoData: DashboardData = {
+export const demoData: DashboardData = {
   dressCode: {
     title: 'Wednesday • Athletic Attire',
     note: 'Scheduled physical curriculum requirement active until 4:00 PM.',
@@ -164,14 +165,12 @@ export default function DashboardScreen() {
     HankenGrotesk_600SemiBold,
     HankenGrotesk_700Bold,
   });
-  const [hasHydrated, setHasHydrated] = useState(false);
+  const hasHydrated = useHydrated();
   const [menuOpen, setMenuOpen] = useState(false);
   const [worn, setWorn] = useState(false);
 
-  const spin = useRef(new Animated.Value(0)).current;
+  const [spin] = useState(() => new Animated.Value(0));
   const wornTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => setHasHydrated(true), []);
 
   useEffect(() => {
     return () => {

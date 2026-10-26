@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -15,6 +15,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useHydrated } from '@/hooks/use-hydrated';
 import {
   HankenGrotesk_400Regular,
   HankenGrotesk_500Medium,
@@ -297,7 +298,7 @@ export default function ClosetScreen() {
     HankenGrotesk_600SemiBold,
     HankenGrotesk_700Bold,
   });
-  const [hasHydrated, setHasHydrated] = useState(false);
+  const hasHydrated = useHydrated();
   const [menuOpen, setMenuOpen] = useState(false);
   const [view, setView] = useState<'grid' | 'builder'>('grid');
   const [category, setCategory] = useState<'all' | GarmentCategory>('all');
@@ -315,8 +316,6 @@ export default function ClosetScreen() {
     bottoms: false,
     footwear: false,
   });
-
-  useEffect(() => setHasHydrated(true), []);
 
   if (!hasHydrated || !fontsLoaded) {
     return (
@@ -986,7 +985,7 @@ const styles = StyleSheet.create({
   garmentImage: { width: '100%', height: '100%' },
   garmentImageMuted: { opacity: 0.6 },
   laundryOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 8,

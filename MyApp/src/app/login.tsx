@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useRouter, type Href } from 'expo-router';
 import Svg, { Path, Defs, RadialGradient, Stop, Rect } from 'react-native-svg';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import {
@@ -201,7 +201,7 @@ export default function LoginScreen() {
                 <Text style={styles.label}>PASSWORD</Text>
                 <Pressable
                   hitSlop={8}
-                  onPress={showAuthUnavailable}
+                  onPress={() => router.push('/forgot_pass' as Href)}
                   style={({ pressed }) => (pressed ? { opacity: 0.75 } : undefined)}
                 >
                   <Text style={styles.link}>Forgot password?</Text>
@@ -275,7 +275,7 @@ export default function LoginScreen() {
           <View style={styles.footer}>
             <View style={styles.footerRow}>
               <Text style={styles.footerText}>New to Clad?</Text>
-              <Pressable hitSlop={8} onPress={showAuthUnavailable}>
+              <Pressable hitSlop={8} onPress={() => router.push('/sign_up' as Href)}>
                 <Text style={styles.createLink}>Create Account</Text>
               </Pressable>
             </View>
