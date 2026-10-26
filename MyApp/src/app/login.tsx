@@ -22,20 +22,21 @@ import {
   HankenGrotesk_700Bold,
 } from '@expo-google-fonts/hanken-grotesk';
 
-// Design tokens (from DESIGN.md)
+// Design tokens (light theme, from login_page.html)
 const colors = {
-  surface: '#131313',
-  surfaceContainerHigh: '#2a2a2a',
-  surfaceContainerHighest: '#353534',
-  onSurface: '#e5e2e1',
-  onSurfaceVariant: '#c4c7c8',
-  outline: '#8e9192',
-  primary: '#ffffff',
-  onPrimary: '#2f3131',
-  secondaryContainer: '#00a572',
-  onSecondaryContainer: '#00311f',
-  blue400: '#60a5fa',
-  blue300: '#93c5fd',
+  surface: '#ffffff',
+  surfaceContainer: '#f4f4f5',
+  surfaceContainerHighest: '#e4e4e7',
+  surfaceContainerPressed: '#f8f9fa',
+  onSurface: '#111111',
+  onSurfaceVariant: '#666666',
+  outline: '#747878',
+  placeholder: '#8e9192',
+  primary: '#111111',
+  onPrimary: '#ffffff',
+  secondary: '#1d4ed8',
+  error: '#ba1a1a',
+  glow: '#dbeafe',
 } as const;
 
 const font = {
@@ -76,8 +77,8 @@ function GlowAura() {
       <Svg width={192} height={192}>
         <Defs>
           <RadialGradient id="glow" cx="50%" cy="50%" r="50%">
-            <Stop offset="0%" stopColor="#2563eb" stopOpacity={0.3} />
-            <Stop offset="100%" stopColor="#2563eb" stopOpacity={0} />
+            <Stop offset="0%" stopColor={colors.glow} stopOpacity={0.6} />
+            <Stop offset="100%" stopColor={colors.glow} stopOpacity={0} />
           </RadialGradient>
         </Defs>
         <Rect width="192" height="192" fill="url(#glow)" />
@@ -110,10 +111,6 @@ export default function LoginScreen() {
     );
   }
 
-  const handleBiometric = () => {
-    Alert.alert('Face ID unavailable', 'Biometric sign-in has not been configured yet.');
-  };
-
   const handleSubmit = () => {
     const normalizedEmail = email.trim();
     if (!normalizedEmail || !password) {
@@ -135,7 +132,7 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.root}>
-      <StatusBar style="light" />
+      <StatusBar style="dark" />
       <SafeAreaView edges={['top']} style={styles.headerWrap}>
         <View style={styles.header}>
           <View style={styles.headerLeft}>
@@ -146,7 +143,7 @@ export default function LoginScreen() {
             >
               <Ionicons name="chevron-back" size={22} color={colors.onSurface} />
             </Pressable>
-            <Text style={styles.headerTitle}>CLAD</Text>
+            <Text style={styles.headerTitle}>Clad</Text>
           </View>
           <View style={styles.avatar}>
             <Ionicons name="person-outline" size={18} color={colors.onPrimary} />
@@ -189,8 +186,8 @@ export default function LoginScreen() {
                   onChangeText={setEmail}
                   onFocus={() => setEmailFocused(true)}
                   onBlur={() => setEmailFocused(false)}
-                  placeholder="Enter your email address"
-                  placeholderTextColor={colors.outline}
+                  placeholder="alex.morgan@icloud.com"
+                  placeholderTextColor={colors.placeholder}
                   keyboardType="email-address"
                   autoCapitalize="none"
                   autoComplete="email"
@@ -218,8 +215,8 @@ export default function LoginScreen() {
                   onChangeText={setPassword}
                   onFocus={() => setPassFocused(true)}
                   onBlur={() => setPassFocused(false)}
-                  placeholder="Enter your password"
-                  placeholderTextColor={colors.outline}
+                  placeholder="••••••••••••"
+                  placeholderTextColor={colors.placeholder}
                   secureTextEntry={!showPassword}
                   autoCapitalize="none"
                   autoComplete="password"
@@ -245,23 +242,11 @@ export default function LoginScreen() {
                 onPress={handleSubmit}
                 style={({ pressed }) => [styles.cta, pressed && styles.pressedScale]}
               >
-                <Text style={styles.ctaText}>Enter</Text>
+                <Text style={styles.ctaText}>Enter Wardrobe</Text>
                 <MaterialIcons name="arrow-forward" size={18} color={colors.onPrimary} />
-              </Pressable>
-              <Pressable
-                accessibilityLabel="Sign in with Face ID"
-                onPress={handleBiometric}
-                style={({ pressed }) => [styles.faceBtn, pressed && styles.pressedScale]}
-              >
-                <MaterialIcons name="face" size={26} color={colors.blue400} />
               </Pressable>
             </View>
             {formError && <Text accessibilityRole="alert" style={styles.formError}>{formError}</Text>}
-          </View>
-
-          <View style={styles.chip}>
-            <MaterialIcons name="info-outline" size={16} color={colors.blue400} />
-            <Text style={styles.chipText}>Biometric sign-in is not configured</Text>
           </View>
 
           {/* Divider */}
@@ -273,11 +258,14 @@ export default function LoginScreen() {
 
           {/* SSO */}
           <View style={styles.sso}>
-            <Pressable onPress={showAuthUnavailable} style={({ pressed }) => [styles.ssoBtn, pressed && styles.pressedScale]}>
-              <Ionicons name="logo-apple" size={20} color={colors.primary} />
-              <Text style={styles.ssoText}>Continue with Apple</Text>
-            </Pressable>
-            <Pressable onPress={showAuthUnavailable} style={({ pressed }) => [styles.ssoBtn, pressed && styles.pressedScale]}>
+            <Pressable
+              onPress={showAuthUnavailable}
+              style={({ pressed }) => [
+                styles.ssoBtn,
+                pressed && styles.ssoBtnPressed,
+                pressed && styles.pressedScale,
+              ]}
+            >
               <GoogleIcon />
               <Text style={styles.ssoText}>Continue with Google</Text>
             </Pressable>
@@ -293,9 +281,7 @@ export default function LoginScreen() {
             </View>
             <View style={styles.secureRow}>
               <MaterialIcons name="shield" size={14} color={colors.outline} />
-              <Text style={styles.secureText}>
-                Protected by Clad Secure Sync • Encrypted Biometrics
-              </Text>
+              <Text style={styles.secureText}>Protected by Clad Secure Sync</Text>
             </View>
           </View>
         </View>
@@ -316,7 +302,9 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 50,
-    backgroundColor: 'rgba(19,19,19,0.85)',
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    borderBottomWidth: 1,
+    borderBottomColor: '#f3f4f6',
   },
   header: {
     height: 56,
@@ -346,12 +334,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
   },
 
   // Layout
   scroll: { paddingTop: 56 + 8, paddingBottom: 32 },
   content: { paddingHorizontal: 16, alignItems: 'center' },
-  glow: { position: 'absolute', top: -20, width: 192, height: 192, alignSelf: 'center' },
+  glow: { position: 'absolute', top: -40, width: 192, height: 192, alignSelf: 'center' },
 
   // Hero
   hero: { alignItems: 'center', marginTop: 8, marginBottom: 24 },
@@ -359,14 +352,16 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: colors.surfaceContainerHigh,
+    backgroundColor: colors.surfaceContainer,
+    borderWidth: 1,
+    borderColor: colors.surfaceContainerHighest,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.5,
-    shadowRadius: 12,
-    elevation: 8,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
   },
   monogramText: {
     fontFamily: font.bold,
@@ -379,13 +374,13 @@ const styles = StyleSheet.create({
     fontSize: 34,
     lineHeight: 41,
     letterSpacing: 8.5,
-    color: colors.primary,
+    color: colors.onSurface,
     textAlign: 'center',
     paddingLeft: 8.5, // balances trailing letter-spacing so text looks centered
   },
   tagline: {
     marginTop: 4,
-    fontFamily: font.medium,
+    fontFamily: font.semibold,
     fontSize: 13,
     letterSpacing: 1.3,
     color: colors.outline,
@@ -417,21 +412,20 @@ const styles = StyleSheet.create({
     fontFamily: font.semibold,
     fontSize: 11,
     lineHeight: 13,
-    letterSpacing: 0.9,
+    letterSpacing: 0.55,
     color: colors.onSurfaceVariant,
   },
-  verifiedRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  verifiedDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.blue400 },
-  verifiedText: { fontFamily: font.medium, fontSize: 10, color: colors.blue400 },
-  link: { fontFamily: font.medium, fontSize: 13, color: colors.blue400 },
+  link: { fontFamily: font.semibold, fontSize: 13, color: colors.secondary },
   inputWrap: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    backgroundColor: colors.surfaceContainerHigh,
+    backgroundColor: colors.surfaceContainer,
+    borderWidth: 1,
+    borderColor: colors.surfaceContainerHighest,
     borderRadius: 9999,
   },
-  inputWrapFocused: { backgroundColor: colors.surfaceContainerHighest },
+  inputWrapFocused: { backgroundColor: colors.surface, borderColor: '#000000' },
   input: {
     flex: 1,
     paddingVertical: 14,
@@ -453,46 +447,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 6,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 4,
   },
   ctaText: { fontFamily: font.semibold, fontSize: 17, color: colors.onPrimary },
   formError: {
     marginTop: -8,
-    color: '#fca5a5',
+    color: colors.error,
     fontFamily: font.medium,
     fontSize: 13,
     textAlign: 'center',
-  },
-  faceBtn: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: colors.surfaceContainerHigh,
-    borderWidth: 1,
-    borderColor: 'rgba(30,58,138,0.3)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  // Chip
-  chip: {
-    marginTop: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 4,
-    borderRadius: 9999,
-    backgroundColor: colors.surfaceContainerHigh,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  chipText: {
-    fontFamily: font.semibold,
-    fontSize: 11,
-    lineHeight: 18,
-    color: colors.onSurfaceVariant,
   },
 
   // Divider
@@ -507,7 +473,7 @@ const styles = StyleSheet.create({
   dividerText: {
     fontFamily: font.medium,
     fontSize: 10,
-    letterSpacing: 1.5,
+    letterSpacing: 1,
     color: colors.outline,
     paddingHorizontal: 4,
   },
@@ -517,25 +483,33 @@ const styles = StyleSheet.create({
   ssoBtn: {
     height: 48,
     borderRadius: 9999,
-    backgroundColor: colors.surfaceContainerHigh,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.surfaceContainerHighest,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
     paddingHorizontal: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
   },
+  ssoBtnPressed: { backgroundColor: colors.surfaceContainerPressed },
   ssoText: {
-    fontFamily: font.semibold,
+    fontFamily: font.medium,
     fontSize: 17,
     letterSpacing: -0.3,
-    color: colors.primary,
+    color: colors.onSurface,
   },
 
   // Footer
   footer: { marginTop: 24, alignItems: 'center', gap: 8 },
   footerRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   footerText: { fontFamily: font.regular, fontSize: 15, color: colors.onSurfaceVariant },
-  createLink: { fontFamily: font.semibold, fontSize: 17, color: colors.blue400 },
-  secureRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4, opacity: 0.7 },
+  createLink: { fontFamily: font.semibold, fontSize: 17, color: colors.secondary },
+  secureRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4, opacity: 0.8 },
   secureText: { fontFamily: font.medium, fontSize: 10, letterSpacing: -0.2, color: colors.outline },
 });
