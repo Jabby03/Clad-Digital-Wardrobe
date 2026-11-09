@@ -1,5 +1,8 @@
+import { useRouter } from 'expo-router';
+import HeaderMenu from '@/components/navigation/header-menu';
+import CladLogo from '@/components/clad-logo';
 import { MaterialIcons } from "@expo/vector-icons";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Animated,
   Image,
@@ -82,8 +85,6 @@ const shadowSm = {
   elevation: 1,
 };
 
-const LOGO =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuAEP4Dpw-Ne61YxnQHFydizicQK93KFnUWpoSt-apC_0Dq-97V23fSPCXL2sHRdYf-jvD8DOtOvjgdbyBg8DbHOK-d6Hln9-3KwMLI4ox_7uMpu6oY3JrbyKoQrCxUviKCdeaPUqhDa1LiRAclecKJI9QOIMDOx_gXDobobkXTJ2My-pitMR8Bhuk1KUJfR8Q9Z_MehQZS85qluxZ3XtSa-82rX18sb3gMfqqRPEuPrax8UT2l-sWz-9g";
 
 /* ------------------------------ Date helpers ----------------------------- */
 
@@ -136,21 +137,15 @@ const TABS: { key: ViewTab; label: string }[] = [
   { key: "history", label: "History Log" },
 ];
 
-type IconName = React.ComponentProps<typeof MaterialIcons>["name"];
-const NAV: { label: string; icon: IconName; active?: boolean }[] = [
-  { label: "Today", icon: "auto-awesome" },
-  { label: "Closet", icon: "checkroom" },
-  { label: "Calendar", icon: "calendar-today", active: true },
-  { label: "Laundry", icon: "local-laundry-service" },
-];
 
 /* --------------------------------- Screen -------------------------------- */
 
 export default function CalendarScreen() {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const entries = useOutfitEntries();
 
-  const today = new Date();
+  const [today] = useState(() => new Date());
   const todayKey = toKey(today.getFullYear(), today.getMonth(), today.getDate());
 
   const [activeTab, setActiveTab] = useState<ViewTab>("month");
@@ -195,7 +190,7 @@ export default function CalendarScreen() {
         return d < new Date(today.getFullYear(), today.getMonth(), today.getDate()) && d >= cutoff;
       })
       .sort((a, b) => b.date.localeCompare(a.date));
-  }, [entries, todayKey]);
+  }, [entries, today]);
 
   const totalWears = entries.reduce((sum, e) => sum + (e.wears ?? 0), 0);
 
@@ -204,7 +199,7 @@ export default function CalendarScreen() {
   const selectedLabel = `${WEEKDAYS[selectedDate.getDay()]}, ${MONTHS_SHORT[selectedDate.getMonth()]} ${selectedDate.getDate()}`;
 
   // card "press" pulse when a day is tapped
-  const cardScale = useRef(new Animated.Value(1)).current;
+  const [cardScale] = useState(() => new Animated.Value(1));
   const selectDay = (key: string): void => {
     setSelectedKey(key);
     Animated.sequence([
@@ -214,7 +209,7 @@ export default function CalendarScreen() {
   };
 
   // pulsing "Active Selection" dot
-  const pulse = useRef(new Animated.Value(1)).current;
+  const [pulse] = useState(() => new Animated.Value(1));
   useEffect(() => {
     const loop = Animated.loop(
       Animated.sequence([
@@ -231,22 +226,15 @@ export default function CalendarScreen() {
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top }]}>
         <View style={styles.headerRow}>
-          <Pressable accessibilityLabel="Menu" style={styles.iconBtn}>
-            <MaterialIcons name="menu" size={24} color={C.gray700} />
-          </Pressable>
+          <HeaderMenu />
 
           <View style={styles.brand}>
-            <Image
-              source={{ uri: LOGO }}
-              accessibilityLabel="Clad Logo"
-              style={styles.logo}
-              resizeMode="contain"
-            />
+            <CladLogo size={30} />
             <Text style={styles.brandText}>CLAD</Text>
           </View>
 
           <View style={styles.headerRight}>
-            <Pressable accessibilityLabel="Notifications" style={styles.iconBtn}>
+            <Pressable accessibilityRole="button" accessibilityLabel="Notifications" onPress={() => router.push('/main/notification')} style={styles.iconBtn}>
               <MaterialIcons name="notifications-none" size={22} color={C.gray700} />
             </Pressable>
             <View style={styles.avatar}>
@@ -261,7 +249,7 @@ export default function CalendarScreen() {
         style={{ flex: 1 }}
         contentContainerStyle={{
           paddingTop: 64 + insets.top,
-          paddingBottom: 96 + insets.bottom,
+          paddingBottom: 24,
           paddingHorizontal: 16,
         }}
         showsVerticalScrollIndicator={false}
@@ -523,24 +511,6 @@ export default function CalendarScreen() {
         </View>
       </ScrollView>
 
-      {/* Bottom nav */}
-      <View style={[styles.nav, { paddingBottom: insets.bottom }]}>
-        <View style={styles.navRow}>
-          {NAV.slice(0, 2).map((n) => (
-            <NavItem key={n.label} {...n} />
-          ))}
-
-          <Pressable accessibilityLabel="Add item" style={styles.addWrap}>
-            <View style={styles.addBtn}>
-              <MaterialIcons name="add" size={24} color={C.white} />
-            </View>
-          </Pressable>
-
-          {NAV.slice(2).map((n) => (
-            <NavItem key={n.label} {...n} />
-          ))}
-        </View>
-      </View>
     </View>
   );
 }
@@ -609,25 +579,6 @@ function DayCell({
   );
 }
 
-function NavItem({
-  label,
-  icon,
-  active,
-}: {
-  label: string;
-  icon: IconName;
-  active?: boolean;
-}) {
-  const color = active ? C.gray900 : C.gray400;
-  return (
-    <Pressable style={styles.navItem}>
-      <MaterialIcons name={icon} size={22} color={color} />
-      <Text style={[styles.navLabel, { color }, active && { fontWeight: "600" }]}>
-        {label}
-      </Text>
-    </Pressable>
-  );
-}
 
 /* --------------------------------- Styles -------------------------------- */
 

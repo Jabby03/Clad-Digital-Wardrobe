@@ -1,3 +1,6 @@
+import { useRouter } from 'expo-router';
+import HeaderMenu from '@/components/navigation/header-menu';
+import CladLogo from '@/components/clad-logo';
 import { MaterialIcons } from "@expo/vector-icons";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -105,8 +108,6 @@ const shadowSm = {
   elevation: 1,
 };
 
-const LOGO =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuAEP4Dpw-Ne61YxnQHFydizicQK93KFnUWpoSt-apC_0Dq-97V23fSPCXL2sHRdYf-jvD8DOtOvjgdbyBg8DbHOK-d6Hln9-3KwMLI4ox_7uMpu6oY3JrbyKoQrCxUviKCdeaPUqhDa1LiRAclecKJI9QOIMDOx_gXDobobkXTJ2My-pitMR8Bhuk1KUJfR8Q9Z_MehQZS85qluxZ3XtSa-82rX18sb3gMfqqRPEuPrax8UT2l-sWz-9g";
 
 /* ------------------------------ Status config ---------------------------- */
 
@@ -140,16 +141,11 @@ const STATUS: Record<
 
 type Filter = "all" | LaundryStatus;
 
-const NAV: { label: string; icon: IconName; active?: boolean }[] = [
-  { label: "Today", icon: "auto-awesome" },
-  { label: "Closet", icon: "checkroom" },
-  { label: "Calendar", icon: "calendar-today" },
-  { label: "Laundry", icon: "local-laundry-service", active: true },
-];
 
 /* --------------------------------- Screen -------------------------------- */
 
 export default function LaundryScreen() {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const { garments, setStatus, markAllClean, addDirty } = useLaundry();
 
@@ -179,7 +175,7 @@ export default function LaundryScreen() {
   ];
 
   /* toast */
-  const toastAnim = useRef(new Animated.Value(0)).current;
+  const [toastAnim] = useState(() => new Animated.Value(0));
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [toastMsg, setToastMsg] = useState("");
 
@@ -210,7 +206,7 @@ export default function LaundryScreen() {
   };
 
   /* pulsing dots */
-  const pulse = useRef(new Animated.Value(1)).current;
+  const [pulse] = useState(() => new Animated.Value(1));
   useEffect(() => {
     const loop = Animated.loop(
       Animated.sequence([
@@ -241,17 +237,15 @@ export default function LaundryScreen() {
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top }]}>
         <View style={styles.headerRow}>
-          <Pressable accessibilityLabel="Menu" style={styles.iconBtn}>
-            <MaterialIcons name="menu" size={24} color={C.gray600} />
-          </Pressable>
+          <HeaderMenu />
 
           <View style={styles.brand}>
-            <Image source={{ uri: LOGO }} accessibilityLabel="Clad Logo" style={styles.logo} resizeMode="contain" />
+            <CladLogo size={30} />
             <Text style={styles.brandText}>CLAD</Text>
           </View>
 
           <View style={styles.headerRight}>
-            <Pressable accessibilityLabel="Notifications" style={styles.iconBtn}>
+            <Pressable accessibilityRole="button" accessibilityLabel="Notifications" onPress={() => router.push('/main/notification')} style={styles.iconBtn}>
               <MaterialIcons name="notifications-none" size={22} color={C.gray600} />
             </Pressable>
             <View style={styles.avatar}>
@@ -266,7 +260,7 @@ export default function LaundryScreen() {
         style={{ flex: 1 }}
         contentContainerStyle={{
           paddingTop: 64 + insets.top,
-          paddingBottom: 96 + insets.bottom,
+          paddingBottom: 24,
           paddingHorizontal: 16,
         }}
         showsVerticalScrollIndicator={false}
@@ -305,7 +299,7 @@ export default function LaundryScreen() {
 
               <View style={styles.gauge}>
                 <Svg width={80} height={80} viewBox="0 0 80 80">
-                  <G rotation="-90" origin="40, 40">
+                  <G transform="rotate(-90 40 40)">
                     <Circle cx={40} cy={40} r={R} stroke={C.gray100} strokeWidth={7} fill="transparent" />
                     <Circle
                       cx={40}
@@ -444,7 +438,7 @@ export default function LaundryScreen() {
         style={[
           styles.toast,
           {
-            bottom: 80 + insets.bottom,
+            bottom: 16,
             opacity: toastAnim,
             transform: [
               { translateY: toastAnim.interpolate({ inputRange: [0, 1], outputRange: [24, 0] }) },
@@ -463,22 +457,6 @@ export default function LaundryScreen() {
         </Pressable>
       </Animated.View>
 
-      {/* Bottom nav */}
-      <View style={[styles.nav, { paddingBottom: insets.bottom }]}>
-        <View style={styles.navRow}>
-          {NAV.slice(0, 2).map((n) => (
-            <NavItem key={n.label} {...n} />
-          ))}
-          <Pressable accessibilityLabel="Add item" style={styles.addWrap}>
-            <View style={styles.addBtn}>
-              <MaterialIcons name="add" size={24} color={C.white} />
-            </View>
-          </Pressable>
-          {NAV.slice(2).map((n) => (
-            <NavItem key={n.label} {...n} />
-          ))}
-        </View>
-      </View>
     </View>
   );
 }
@@ -619,15 +597,6 @@ function SettingRow({
   );
 }
 
-function NavItem({ label, icon, active }: { label: string; icon: IconName; active?: boolean }) {
-  const color = active ? C.gray900 : C.gray500;
-  return (
-    <Pressable style={styles.navItem}>
-      <MaterialIcons name={icon} size={22} color={color} />
-      <Text style={[styles.navLabel, { color }, active && { fontWeight: "600" }]}>{label}</Text>
-    </Pressable>
-  );
-}
 
 /* --------------------------------- Styles -------------------------------- */
 

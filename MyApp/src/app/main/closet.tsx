@@ -1,7 +1,8 @@
+import LoadingScreen from '@/components/loading-screen';
+import HeaderMenu from '@/components/navigation/header-menu';
 import CladLogo from '@/components/clad-logo';
 import React, { useState } from 'react';
 import {
-  ActivityIndicator,
   Alert,
   Image,
   Platform,
@@ -119,13 +120,6 @@ const slotCategories = [
 
 type SlotKey = (typeof slotCategories)[number]['key'];
 
-const tabs = [
-  { key: 'today', label: 'Today', icon: 'auto-awesome' as const },
-  { key: 'closet', label: 'Closet', icon: 'checkroom' as const, active: true },
-  { key: 'add', label: 'Add item', icon: 'add' as const, primary: true },
-  { key: 'calendar', label: 'Calendar', icon: 'calendar-today' as const },
-  { key: 'laundry', label: 'Laundry', icon: 'local-laundry-service' as const },
-];
 
 // ---------------------------------------------------------------------------
 // Pieces
@@ -299,7 +293,6 @@ export default function ClosetScreen() {
     HankenGrotesk_700Bold,
   });
   const hasHydrated = useHydrated();
-  const [menuOpen, setMenuOpen] = useState(false);
   const [view, setView] = useState<'grid' | 'builder'>('grid');
   const [category, setCategory] = useState<'all' | GarmentCategory>('all');
   const [statusFilter, setStatusFilter] = useState<'all' | GarmentStatus>('all');
@@ -318,11 +311,7 @@ export default function ClosetScreen() {
   });
 
   if (!hasHydrated || !fontsLoaded) {
-    return (
-      <View style={styles.loading}>
-        <ActivityIndicator color={colors.primary} />
-      </View>
-    );
+    return <LoadingScreen />;
   }
 
   // Counts for the filter pills
@@ -371,14 +360,7 @@ export default function ClosetScreen() {
       <StatusBar style="dark" />
       <SafeAreaView edges={['top']} style={styles.headerSafe}>
         <View style={styles.header}>
-          <Pressable
-            accessibilityLabel="Open menu"
-            accessibilityState={{ expanded: menuOpen }}
-            onPress={() => setMenuOpen((open) => !open)}
-            style={styles.headerIconButton}
-          >
-            <MaterialIcons name="menu" size={25} color={colors.primary} />
-          </Pressable>
+          <HeaderMenu />
           <View style={styles.brand}>
             <CladLogo size={30} />
             <Text style={styles.brandText}>CLAD</Text>
@@ -386,7 +368,7 @@ export default function ClosetScreen() {
           <View style={styles.headerActions}>
             <Pressable
               accessibilityLabel="Notifications"
-              onPress={() => Alert.alert('Notifications', 'Notifications are not available yet.')}
+              onPress={() => router.push('/main/notification')}
               style={styles.headerIconButton}
             >
               <MaterialIcons name="notifications-none" size={23} color={colors.primary} />
@@ -396,53 +378,10 @@ export default function ClosetScreen() {
             </View>
           </View>
         </View>
-        {menuOpen && (
-          <View style={styles.menuDropdown} accessibilityRole="menu">
-            <Pressable
-              accessibilityRole="button"
-              onPress={() => {
-                setMenuOpen(false);
-                Alert.alert('Profile', 'Jabi\njabi@clad.demo');
-              }}
-              style={styles.menuItem}
-            >
-              <MaterialIcons name="person-outline" size={20} color={colors.gray600} />
-              <Text style={styles.menuItemText}>Profile</Text>
-            </Pressable>
-            <Pressable
-              accessibilityRole="button"
-              onPress={() => {
-                setMenuOpen(false);
-                Alert.alert('Settings', 'Settings are not available yet.');
-              }}
-              style={styles.menuItem}
-            >
-              <MaterialIcons name="settings" size={20} color={colors.gray600} />
-              <Text style={styles.menuItemText}>Settings</Text>
-            </Pressable>
-            <View style={styles.menuDivider} />
-            <Pressable
-              accessibilityRole="button"
-              onPress={() => {
-                setMenuOpen(false);
-                router.replace('/');
-              }}
-              style={styles.menuItem}
-            >
-              <MaterialIcons name="logout" size={20} color={colors.blue} />
-              <Text style={[styles.menuItemText, styles.logoutText]}>Logout</Text>
-            </Pressable>
-          </View>
-        )}
+
       </SafeAreaView>
 
-      {menuOpen && (
-        <Pressable
-          accessibilityLabel="Close menu"
-          onPress={() => setMenuOpen(false)}
-          style={styles.menuBackdrop}
-        />
-      )}
+
 
       <ScrollView
         style={styles.scroll}
@@ -680,48 +619,7 @@ export default function ClosetScreen() {
         )}
       </ScrollView>
 
-      <SafeAreaView edges={['bottom']} style={styles.bottomSafe}>
-        <View style={styles.bottomBar}>
-          {tabs.map((tab) =>
-            tab.primary ? (
-              <View key={tab.key} style={styles.addWrap}>
-                <Pressable
-                  accessibilityLabel={tab.label}
-                  accessibilityRole="button"
-                  onPress={() => Alert.alert(tab.label, `${tab.label} is coming soon.`)}
-                  style={({ pressed }) => [styles.addButton, pressed && styles.pressedScale]}
-                >
-                  <MaterialIcons name={tab.icon} size={26} color={colors.white} />
-                </Pressable>
-              </View>
-            ) : (
-              <Pressable
-                key={tab.key}
-                accessibilityRole="button"
-                accessibilityState={{ selected: Boolean(tab.active) }}
-                onPress={() => {
-                  if (tab.active) return;
-                  if (tab.key === 'today') {
-                    router.replace('/main/today');
-                    return;
-                  }
-                  Alert.alert(tab.label, `${tab.label} is coming soon.`);
-                }}
-                style={styles.tabButton}
-              >
-                <MaterialIcons
-                  name={tab.icon}
-                  size={22}
-                  color={tab.active ? colors.primary : colors.gray500}
-                />
-                <Text style={[styles.tabLabel, tab.active && styles.tabLabelActive]}>
-                  {tab.label}
-                </Text>
-              </Pressable>
-            ),
-          )}
-        </View>
-      </SafeAreaView>
+
     </View>
   );
 }

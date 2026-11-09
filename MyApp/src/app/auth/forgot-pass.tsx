@@ -1,3 +1,4 @@
+import LoadingScreen from '@/components/loading-screen';
 import CladLogo from '@/components/clad-logo';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -8,7 +9,6 @@ import {
   Animated,
   ScrollView,
   StyleSheet,
-  ActivityIndicator,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -90,11 +90,7 @@ export default function ForgotPasswordScreen() {
   }, []);
 
   if (!fontsLoaded) {
-    return (
-      <View style={[styles.root, styles.center]}>
-        <ActivityIndicator color={colors.primary} />
-      </View>
-    );
+    return <LoadingScreen />;
   }
 
   const switchMethod = (next: Method) => {

@@ -1,4 +1,6 @@
+import LoadingScreen from '@/components/loading-screen';
 import { MaterialIcons } from "@expo/vector-icons";
+import CladLogo from '@/components/clad-logo';
 import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import {
@@ -10,7 +12,6 @@ import {
 import { useHydrated } from '@/hooks/use-hydrated';
 import {
   Image,
-  ActivityIndicator,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -198,7 +199,7 @@ export default function NotificationsScreen() {
   const allRead = items.length > 0 && unreadCount === 0;
 
   if (!hasHydrated || !fontsLoaded) {
-    return <View style={[styles.screen, styles.centered]}><ActivityIndicator color={C.onSurface} /></View>;
+    return <LoadingScreen />;
   }
 
   return (
@@ -214,6 +215,7 @@ export default function NotificationsScreen() {
             >
               <MaterialIcons name="arrow-back-ios-new" size={20} color={C.onSurface} />
             </Pressable>
+            <CladLogo size={28} />
             <Text style={styles.headerTitle}>Notifications</Text>
           </View>
 

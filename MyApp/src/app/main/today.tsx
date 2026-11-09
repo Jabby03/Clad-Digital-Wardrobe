@@ -1,8 +1,8 @@
+import LoadingScreen from '@/components/loading-screen';
+import HeaderMenu from '@/components/navigation/header-menu';
 import CladLogo from '@/components/clad-logo';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  ActivityIndicator,
-  Alert,
   Animated,
   Image,
   Pressable,
@@ -151,7 +151,6 @@ export default function DashboardScreen() {
     HankenGrotesk_700Bold,
   });
   const hasHydrated = useHydrated();
-  const [menuOpen, setMenuOpen] = useState(false);
   const [worn, setWorn] = useState(false);
 
   const [spin] = useState(() => new Animated.Value(0));
@@ -164,11 +163,7 @@ export default function DashboardScreen() {
   }, []);
 
   if (!hasHydrated || !fontsLoaded) {
-    return (
-      <View style={styles.loading}>
-        <ActivityIndicator color={colors.title} />
-      </View>
-    );
+    return <LoadingScreen />;
   }
 
   const { dressCode, weather, outfit, laundry, rotation, styleNote } = dashboard;
@@ -200,14 +195,7 @@ export default function DashboardScreen() {
       <StatusBar style="dark" />
       <SafeAreaView edges={['top']} style={styles.headerSafe}>
         <View style={styles.header}>
-          <Pressable
-            accessibilityLabel="Open menu"
-            accessibilityState={{ expanded: menuOpen }}
-            onPress={() => setMenuOpen((open) => !open)}
-            style={styles.headerIconButton}
-          >
-            <MaterialIcons name="menu" size={25} color={colors.icon} />
-          </Pressable>
+          <HeaderMenu />
           <View style={styles.brand}>
             <CladLogo size={30} />
             <Text style={styles.brandText}>CLAD</Text>
@@ -225,53 +213,10 @@ export default function DashboardScreen() {
             </View>
           </View>
         </View>
-        {menuOpen && (
-          <View style={styles.menuDropdown} accessibilityRole="menu">
-            <Pressable
-              accessibilityRole="button"
-              onPress={() => {
-                setMenuOpen(false);
-                router.push('/main/profile');
-              }}
-              style={styles.menuItem}
-            >
-              <MaterialIcons name="person-outline" size={20} color={colors.icon} />
-              <Text style={styles.menuItemText}>Profile</Text>
-            </Pressable>
-            <Pressable
-              accessibilityRole="button"
-              onPress={() => {
-                setMenuOpen(false);
-                Alert.alert('Settings', 'Settings are not available yet.');
-              }}
-              style={styles.menuItem}
-            >
-              <MaterialIcons name="settings" size={20} color={colors.icon} />
-              <Text style={styles.menuItemText}>Settings</Text>
-            </Pressable>
-            <View style={styles.menuDivider} />
-            <Pressable
-              accessibilityRole="button"
-              onPress={() => {
-                setMenuOpen(false);
-                router.replace('/');
-              }}
-              style={styles.menuItem}
-            >
-              <MaterialIcons name="logout" size={20} color={colors.blue} />
-              <Text style={[styles.menuItemText, styles.logoutText]}>Logout</Text>
-            </Pressable>
-          </View>
-        )}
+
       </SafeAreaView>
 
-      {menuOpen && (
-        <Pressable
-          accessibilityLabel="Close menu"
-          onPress={() => setMenuOpen(false)}
-          style={styles.menuBackdrop}
-        />
-      )}
+
 
       <ScrollView
         style={styles.scroll}

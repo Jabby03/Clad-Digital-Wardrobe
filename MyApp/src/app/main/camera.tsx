@@ -1,4 +1,5 @@
 import { MaterialIcons } from '@expo/vector-icons';
+import CladLogo from '@/components/clad-logo';
 import { CameraView, useCameraPermissions, type CameraType } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { useFocusEffect, useRouter } from 'expo-router';
@@ -97,7 +98,8 @@ export default function CameraScreen() {
         <Pressable accessibilityRole="button" accessibilityLabel="Back to closet" onPress={() => router.replace('/main/closet')} style={styles.iconButton}>
           <MaterialIcons name="arrow-back" size={24} color="#111827" />
         </Pressable>
-        <View><Text style={styles.title}>Add clothes</Text><Text style={styles.subtitle}>Capture a piece for your wardrobe</Text></View>
+        <CladLogo size={32} />
+        <View style={{ flex: 1 }}><Text style={styles.title}>Add clothes</Text><Text style={styles.subtitle}>Capture a piece for your wardrobe</Text></View>
       </View>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <View style={styles.preview}>

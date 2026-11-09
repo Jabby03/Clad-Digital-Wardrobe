@@ -6,11 +6,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export const mainScreens = [
   { href: '/main/today', label: 'Today', icon: 'auto-awesome' },
   { href: '/main/closet', label: 'Closet', icon: 'checkroom' },
-  { href: '/main/calendar', label: 'Calendar', icon: 'calendar-today' },
   { href: '/main/camera', label: 'Add item', icon: 'add' },
+  { href: '/main/calendar', label: 'Calendar', icon: 'calendar-today' },
   { href: '/main/laundry', label: 'Laundry', icon: 'local-laundry-service' },
-  { href: '/main/notification', label: 'Notifications', icon: 'notifications-none' },
-  { href: '/main/profile', label: 'Profile', icon: 'person-outline' },
 ] as const;
 
 export default function MainNavigation() {

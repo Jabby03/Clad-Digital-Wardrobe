@@ -1,3 +1,4 @@
+import LoadingScreen from '@/components/loading-screen';
 import CladLogo from '@/components/clad-logo';
 import React, { useState } from 'react';
 import {
@@ -8,7 +9,6 @@ import {
   Alert,
   ScrollView,
   StyleSheet,
-  ActivityIndicator,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -105,11 +105,7 @@ export default function LoginScreen() {
   const [passFocused, setPassFocused] = useState<boolean>(false);
   const [formError, setFormError] = useState<string | null>(null);
   if (!fontsLoaded) {
-    return (
-      <View style={[styles.root, styles.center]}>
-        <ActivityIndicator color={colors.primary} />
-      </View>
-    );
+    return <LoadingScreen />;
   }
 
   const handleSubmit = () => {

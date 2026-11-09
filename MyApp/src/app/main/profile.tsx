@@ -1,3 +1,4 @@
+import CladLogo from '@/components/clad-logo';
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useEffect, useRef } from "react";
@@ -83,8 +84,6 @@ const shadowSm = {
   elevation: 1,
 };
 
-const LOGO =
-  "https://lh3.googleusercontent.com/aida/ALJJyrBe5jKCwK304RKQ5EpRzthBRnqbM4PTxpXQOorf-4iw-6BYNA9BiM-sr94-U16diys6IlFicgW_NonxBzEkkCwgF00xxpAzq9AxACYJBXKke4bAy5eMOYxzoVGMFIBawSmChNyNY_d_k_BESvcNQi9Vd3X_hwMvaA7U6t33MQVJAzC_sBvIo_Ta9mjxN_a2AL3CF3qOegTbESDcAkL3Q1kC8Xt2mmGPaAJwnV38wfVC_iOTZqVELBmhXWdI";
 
 type IconName = React.ComponentProps<typeof MaterialIcons>["name"];
 
@@ -172,12 +171,7 @@ export default function ProfileScreen() {
             >
               <MaterialIcons name="arrow-back-ios-new" size={20} color={C.onSurface} />
             </Pressable>
-            <Image
-              source={{ uri: LOGO }}
-              accessibilityLabel="Clad logo"
-              style={styles.logo}
-              resizeMode="contain"
-            />
+            <CladLogo size={30} />
           </View>
 
           <View style={{ flex: 1, alignItems: "center" }}>
