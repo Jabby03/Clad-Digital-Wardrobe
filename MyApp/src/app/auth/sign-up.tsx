@@ -152,7 +152,7 @@ export default function SignupScreen() {
     }
 
     setFormError(null);
-    router.replace('/dashboard');
+    router.replace('/main/dashboard');
   };
 
   const showAuthUnavailable = () => {
@@ -344,7 +344,7 @@ export default function SignupScreen() {
           <View style={styles.footer}>
             <View style={styles.footerRow}>
               <Text style={styles.footerText}>Already have an account?</Text>
-              <Pressable hitSlop={8} onPress={() => router.replace('/login')}>
+              <Pressable hitSlop={8} onPress={() => router.replace('/auth/sign-in')}>
                 <Text style={styles.signInLink}>Sign In</Text>
               </Pressable>
             </View>

@@ -55,7 +55,7 @@ const font = {
   bold: 'HankenGrotesk_700Bold',
 } as const;
 
-const cladLogo = require('../../assets/images/clad-logo.png');
+const cladLogo = require('@/assets/branding/clad-logo.png');
 
 const tabs = [
   { key: 'today', label: 'Today', icon: 'auto-awesome' as const, active: true },

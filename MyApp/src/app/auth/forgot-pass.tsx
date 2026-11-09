@@ -324,7 +324,7 @@ export default function ForgotPasswordScreen() {
               <Text style={styles.footerText}>Remember your credentials?</Text>
               <Pressable
                 hitSlop={8}
-                onPress={() => (router.canGoBack() ? router.back() : router.replace('/login'))}
+                onPress={() => (router.canGoBack() ? router.back() : router.replace('/auth/sign-in'))}
               >
                 <Text style={styles.signInLink}>Sign In</Text>
               </Pressable>

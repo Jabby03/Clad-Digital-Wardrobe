@@ -59,7 +59,7 @@ const font = {
 
 const monoFont = Platform.select({ ios: 'Menlo', default: 'monospace' });
 
-const cladLogo = require('../../assets/images/clad-logo.png');
+const cladLogo = require('@/assets/branding/clad-logo.png');
 
 // ---------------------------------------------------------------------------
 // Closet data
@@ -707,7 +707,7 @@ export default function ClosetScreen() {
                 onPress={() => {
                   if (tab.active) return;
                   if (tab.key === 'today') {
-                    router.replace('/dashboard');
+                    router.replace('/main/dashboard');
                     return;
                   }
                   Alert.alert(tab.label, `${tab.label} is coming soon.`);
