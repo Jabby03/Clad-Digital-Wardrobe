@@ -1,3 +1,4 @@
+import CladLogo from '@/components/clad-logo';
 import React, { useState } from 'react';
 import {
   View,
@@ -138,7 +139,7 @@ export default function LoginScreen() {
           <View style={styles.headerLeft}>
             <Pressable
               accessibilityLabel="Go back"
-              onPress={() => (router.canGoBack() ? router.back() : undefined)}
+              onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
               style={({ pressed }) => [styles.backBtn, pressed && styles.pressedScale]}
             >
               <Ionicons name="chevron-back" size={22} color={colors.onSurface} />
@@ -162,7 +163,7 @@ export default function LoginScreen() {
           {/* Hero */}
           <View style={styles.hero}>
             <View style={styles.monogramCircle}>
-              <Text style={styles.monogramText}>C</Text>
+              <CladLogo />
             </View>
             <Text style={styles.brand}>CLAD</Text>
             <Text style={styles.tagline}>WEAR IT, CLAD IT.</Text>
@@ -186,7 +187,7 @@ export default function LoginScreen() {
                   onChangeText={setEmail}
                   onFocus={() => setEmailFocused(true)}
                   onBlur={() => setEmailFocused(false)}
-                  placeholder="alex.morgan@icloud.com"
+                  placeholder="Enter your emeail address"
                   placeholderTextColor={colors.placeholder}
                   keyboardType="email-address"
                   autoCapitalize="none"
@@ -215,7 +216,7 @@ export default function LoginScreen() {
                   onChangeText={setPassword}
                   onFocus={() => setPassFocused(true)}
                   onBlur={() => setPassFocused(false)}
-                  placeholder="••••••••••••"
+                  placeholder="Enter your password"
                   placeholderTextColor={colors.placeholder}
                   secureTextEntry={!showPassword}
                   autoCapitalize="none"
@@ -362,11 +363,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 1,
-  },
-  monogramText: {
-    fontFamily: font.bold,
-    fontSize: 44,
-    color: colors.primary,
   },
   brand: {
     marginTop: 16,

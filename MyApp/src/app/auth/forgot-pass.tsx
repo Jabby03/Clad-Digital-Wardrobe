@@ -1,3 +1,4 @@
+import CladLogo from '@/components/clad-logo';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
@@ -170,7 +171,7 @@ export default function ForgotPasswordScreen() {
           <View style={styles.hero}>
             <View style={styles.badge}>
               <Animated.View style={[styles.badgePulse, { opacity: pulse }]} />
-              <MaterialIcons name="lock-reset" size={28} color={colors.onSurface} />
+              <CladLogo />
               <View style={styles.badgeCheck}>
                 <MaterialIcons name="verified-user" size={13} color={colors.emeraldText} />
               </View>

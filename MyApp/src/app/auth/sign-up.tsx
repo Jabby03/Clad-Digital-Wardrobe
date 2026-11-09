@@ -1,3 +1,4 @@
+import CladLogo from '@/components/clad-logo';
 import React, { useState } from 'react';
 import {
   View,
@@ -12,7 +13,7 @@ import {
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import Svg, { Path, Defs, RadialGradient, Stop, Rect } from 'react-native-svg';
+import Svg, { Defs, RadialGradient, Stop, Rect } from 'react-native-svg';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import {
   useFonts,
@@ -64,25 +65,6 @@ function getStrength(pw: string): 0 | 1 | 2 | 3 | 4 {
   if (/\d/.test(pw)) score += 1;
   if (/[^A-Za-z0-9]/.test(pw)) score += 1;
   return Math.max(score, 1) as 1 | 2 | 3 | 4;
-}
-
-function MonogramIcon({ size = 32 }: { size?: number }) {
-  return (
-    <Svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke={colors.onSurface}
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <Path d="M7 6a4 4 0 0 1 4-4 4 4 0 0 1 4 4v1" />
-      <Path d="M12 7.5L3 13.5v5.5a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5.5L12 7.5z" />
-      <Path d="M10 12h4" />
-    </Svg>
-  );
 }
 
 function GlowAura() {
@@ -167,7 +149,7 @@ export default function SignupScreen() {
           <View style={styles.headerLeft}>
             <Pressable
               accessibilityLabel="Go back"
-              onPress={() => (router.canGoBack() ? router.back() : undefined)}
+              onPress={() => (router.canGoBack() ? router.back() : router.replace('/auth/sign-in'))}
               style={({ pressed }) => [styles.backBtn, pressed && styles.pressedScale]}
             >
               <Ionicons name="chevron-back" size={22} color={colors.onSurface} />
@@ -190,7 +172,7 @@ export default function SignupScreen() {
           <View style={styles.hero}>
             <GlowAura />
             <View style={styles.monogramCircle}>
-              <MonogramIcon />
+              <CladLogo />
             </View>
             <Text style={styles.motto}>WEAR IT, CLAD IT</Text>
             <Text style={styles.heroTitle}>Create Your Wardrobe</Text>

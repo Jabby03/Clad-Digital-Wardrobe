@@ -1,3 +1,4 @@
+import CladLogo from '@/components/clad-logo';
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter, type Href } from "expo-router";
 import Svg, { Defs, LinearGradient as SvgLinearGradient, Rect, Stop } from "react-native-svg";
@@ -12,6 +13,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useHydrated } from "@/hooks/use-hydrated";
 
 const COLORS = {
   surface: "#fbf9f8",
@@ -25,21 +27,23 @@ const COLORS = {
   surfaceContainerLow: "#f5f3f3",
 };
 
-const HERO_IMAGE =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuAvGw4zf02uWSf8ZD_ido3laydUCMtYY91BL_S9Qegg_BL64PK2xnV7XfxcM780Fu3F0MpOMz9bFx3ISXLweX8ipXtBD301O8D7XKoPuTVYsesJ1mo6TJrl5Jb4QM9XjMdd-rAIBp9YD3z743nnyKG9GOef269VMCQBQFb5t0Io6XotvoKCAj9IbVWc-EwChtJrgxRJ-3DIja5yfRfUv9WE4t6Uzu2OM9o60_FDyji29m48-jw6iaMSHj5QRP2JFfmflEw";
+const HERO_IMAGE = require("@/assets/branding/clothes-bg.jpg");
 
-const MONOGRAM_IMAGE =
-  "https://lh3.googleusercontent.com/aida/AEtjO1WFUkWvcDASghgdWmHXmNGAu7Bj1_USfwWd3KiBmrWT-9RrI9ATP7bFisJYBOvSLsn4G2-ZJ17WjQySMq3kWpuakPONdLWr4t_AStYLA_FnJ43tYFxBhwzdlqkR1JzGnXkRFyuHUvq2Z35QMjYYyF37B-zpLiFeutFMKEXwRcJ_yVSXkfpMkRu0Kip8MYCC5-4EcnIIRXi9Fcf0hL3ISgiNIc-qZXU-J6gcVNtReIlD5frY4hY3bKMCH4j6";
 
 export default function OpeningPage() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
+  const hasHydrated = useHydrated();
 
-  const heroHeight = Math.max(height * 0.52, 340);
+  // Match the server layout on the first browser render, then use device measurements.
+  const layoutHeight = hasHydrated ? height : 0;
+  const topInset = hasHydrated ? insets.top : 0;
+  const bottomInset = hasHydrated ? insets.bottom : 0;
+  const heroHeight = Math.max(layoutHeight * 0.52, 340);
 
   const handleGetStarted = (): void => {
-    router.push("/auth/sign-up" as Href);
+    router.push("/auth/sign-in" as Href);
   };
 
   const handleSignIn = (): void => {
@@ -57,11 +61,11 @@ export default function OpeningPage() {
       bounces={false}
       showsVerticalScrollIndicator={false}
     >
-      <View style={[styles.container, { minHeight: height }]}>
+      <View style={[styles.container, { minHeight: layoutHeight }]}>
         {/* Hero */}
         <View style={{ width: "100%", height: heroHeight, overflow: "hidden" }}>
           <Image
-            source={{ uri: HERO_IMAGE }}
+            source={HERO_IMAGE}
             accessibilityLabel="Clothes collection background"
             style={styles.heroImage}
             resizeMode="cover"
@@ -81,21 +85,16 @@ export default function OpeningPage() {
             </Defs>
             <Rect width="100%" height="100%" fill="url(#openingHeroGradient)" />
           </Svg>
-          <View style={[styles.heroTopBar, { paddingTop: 24 + insets.top }]}>
+          <View style={[styles.heroTopBar, { paddingTop: 24 + topInset }]}>
             <View style={styles.monogramWrap}>
-              <Image
-                source={{ uri: MONOGRAM_IMAGE }}
-                accessibilityLabel="Clad Monogram"
-                style={styles.monogram}
-                resizeMode="contain"
-              />
+              <CladLogo />
             </View>
           </View>
         </View>
 
         {/* Content */}
         <View
-          style={[styles.content, { paddingBottom: 32 + insets.bottom }]}
+          style={[styles.content, { paddingBottom: 32 + bottomInset }]}
         >
           <View style={styles.titleBlock}>
             <Text style={styles.title}>CLAD</Text>
@@ -108,7 +107,7 @@ export default function OpeningPage() {
           <View style={styles.actions}>
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Get started and create an account"
+              accessibilityLabel="Get started and sign in"
               onPress={handleGetStarted}
               style={({ pressed }) => [
                 styles.primaryButton,
@@ -193,7 +192,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    padding: 6,
+    padding: 0,
     backgroundColor: "rgba(255,255,255,0.8)",
     borderWidth: 1,
     borderColor: "rgba(196,199,199,0.3)",
@@ -204,10 +203,6 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     shadowOffset: { width: 0, height: 1 },
     elevation: 1,
-  },
-  monogram: {
-    width: "100%",
-    height: "100%",
   },
   content: {
     flex: 1,

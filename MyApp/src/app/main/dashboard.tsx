@@ -1,3 +1,4 @@
+import CladLogo from '@/components/clad-logo';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -55,7 +56,6 @@ const font = {
   bold: 'HankenGrotesk_700Bold',
 } as const;
 
-const cladLogo = require('@/assets/branding/clad-logo.png');
 
 const tabs = [
   { key: 'today', label: 'Today', icon: 'auto-awesome' as const, active: true },
@@ -73,7 +73,7 @@ type OutfitItem = {
   category: string;
   name: string;
   detail: string;
-  imageUri: string;
+  imageUri?: string;
   clean: boolean;
 };
 
@@ -114,8 +114,6 @@ export const demoData: DashboardData = {
       category: 'Outerwear',
       name: 'Matte Obsidian Bomber',
       detail: 'Water-resistant nylon',
-      imageUri:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuDW9hvT4tE3pZQOzS32ZV8ez1Lnhf8Y5h9FPz8T1poRd6v5s6ZuRG8siUGs4N9J9jhQIDa6WVVs_PDiSI3xEZ_4az0cMVZWl2JfC8yk37APYsaRhsyLnhDt1rwJ6nubzpvkHX2UOtWpYagfa5a3lcqg7WL2SxjZuRrVjcHcrLqdfeMMI4p_6oEutAo2oizpM72NGm4KYWhFtLAGce24u0vnTBre-aGhc4ndnC93Ytj6i2n6y6gze7LwQA',
       clean: true,
     },
     {
@@ -123,8 +121,6 @@ export const demoData: DashboardData = {
       category: 'Top',
       name: 'Heather Boxy Tee',
       detail: '280gsm organic cotton',
-      imageUri:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuBRlGSMopxhpMoukCHVu8A2kRmt5mXq9kmbEUJX7mJyeitunyGhQy6WODPb3Bu_HDbkEARoD0jTfP2wFXFZuAd3H2mpu-ZTk_rB2vPTzdDQXu22-qEQV7-mCARPMu7kRuOXrUUzKE1VxByzs7ejMH3MvN9wIcxdTd9yi8akhzGn6g5Z8wj2YWfwtxZMJ0RVG690_9MF6-hchMzRxUCSF3Tr-bmG2ambEvVZWqCWOJsm1EUpA-QuhI8ClA',
       clean: true,
     },
     {
@@ -132,8 +128,6 @@ export const demoData: DashboardData = {
       category: 'Bottom',
       name: 'Charcoal Tech Joggers',
       detail: '4-way technical stretch',
-      imageUri:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuB-RfxcnHLur4vOYuD3avZf4RhrYKI33Py0zfOvK8DZZ8Iu7qd50OUmiT8-xYmJ2ZfnbD8n2FOc_mvouXlqWHlqJLg0D2p9XcqIyoMLx8555aDs3mSmTeHNUQgqpiKb_Ad_hxlSWsJvHZ9395E2ZwJDOYWxjNqr98wrG2rtu3Y9JV6s1n3yL9Kwb_-Xzm9feXaCwFqCYpuncWykKE4wtrMg3cmcfA7hW-_YIAf_RwmrYAafDH4XPYEG-w',
       clean: true,
     },
     {
@@ -141,8 +135,6 @@ export const demoData: DashboardData = {
       category: 'Footwear',
       name: 'Atelier Low Court',
       detail: 'Calfskin monochrome',
-      imageUri:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuCKRQAvp5XA23b5NEDJAU-kMVbWwiqjeVpWjVuQYnLYie2RCxgu13LJ-ILjF3_Bz8i2sfITUpcMq2QlfzgE7ZGtEtJicFrqUIarwrRAUP1O23G8vhooYiZxrgLL9Yu5pKVUPC3jHdb6qzvZCfLyBbUmFdpNWqjCvG0hFqbYP4a0tand0C7HSMc_7Rd4f8anWb2VfH-p97jHOBlhO0DrUJHIoX3mNipiGwdD6saKHPgIX_VIeFuESpSDxw',
       clean: true,
     },
   ],
@@ -224,12 +216,7 @@ export default function DashboardScreen() {
             <MaterialIcons name="menu" size={25} color={colors.icon} />
           </Pressable>
           <View style={styles.brand}>
-            <Image
-              source={cladLogo}
-              style={styles.logo}
-              resizeMode="contain"
-              tintColor={colors.strong}
-            />
+            <CladLogo size={30} />
             <Text style={styles.brandText}>CLAD</Text>
           </View>
           <View style={styles.headerActions}>
@@ -373,12 +360,21 @@ export default function DashboardScreen() {
                     {row.map((item) => (
                       <View key={item.id} style={styles.itemCard}>
                         <View style={styles.itemImageWrap}>
-                          <Image
-                            source={{ uri: item.imageUri }}
-                            style={styles.itemImage}
-                            resizeMode="cover"
-                            accessibilityLabel={item.name}
-                          />
+                          {item.imageUri ? (
+                            <Image
+                              source={{ uri: item.imageUri }}
+                              style={styles.itemImage}
+                              resizeMode="cover"
+                              accessibilityLabel={item.name}
+                            />
+                          ) : (
+                            <View
+                              style={[styles.itemImage, { alignItems: 'center', justifyContent: 'center' }]}
+                              accessibilityLabel={`${item.name}: photo not added`}
+                            >
+                              <MaterialIcons name="checkroom" size={48} color={colors.muted} />
+                            </View>
+                          )}
                           <View style={styles.itemBadge}>
                             <Text style={styles.itemBadgeText}>{item.category}</Text>
                           </View>
@@ -578,7 +574,6 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   brand: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  logo: { width: 30, height: 30 },
   brandText: {
     color: colors.strong,
     fontFamily: font.bold,

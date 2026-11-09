@@ -1,3 +1,4 @@
+import CladLogo from '@/components/clad-logo';
 import React, { useState } from 'react';
 import {
   ActivityIndicator,
@@ -59,7 +60,6 @@ const font = {
 
 const monoFont = Platform.select({ ios: 'Menlo', default: 'monospace' });
 
-const cladLogo = require('@/assets/branding/clad-logo.png');
 
 // ---------------------------------------------------------------------------
 // Closet data
@@ -380,12 +380,7 @@ export default function ClosetScreen() {
             <MaterialIcons name="menu" size={25} color={colors.primary} />
           </Pressable>
           <View style={styles.brand}>
-            <Image
-              source={cladLogo}
-              style={styles.logo}
-              resizeMode="contain"
-              tintColor={colors.primary}
-            />
+            <CladLogo size={30} />
             <Text style={styles.brandText}>CLAD</Text>
           </View>
           <View style={styles.headerActions}>
@@ -770,7 +765,6 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   brand: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  logo: { width: 30, height: 30 },
   brandText: {
     color: colors.primary,
     fontFamily: font.semibold,
