@@ -119,13 +119,6 @@ const slotCategories = [
 
 type SlotKey = (typeof slotCategories)[number]['key'];
 
-const tabs = [
-  { key: 'today', label: 'Today', icon: 'auto-awesome' as const },
-  { key: 'closet', label: 'Closet', icon: 'checkroom' as const, active: true },
-  { key: 'add', label: 'Add item', icon: 'add' as const, primary: true },
-  { key: 'calendar', label: 'Calendar', icon: 'calendar-today' as const },
-  { key: 'laundry', label: 'Laundry', icon: 'local-laundry-service' as const },
-];
 
 // ---------------------------------------------------------------------------
 // Pieces
@@ -386,7 +379,7 @@ export default function ClosetScreen() {
           <View style={styles.headerActions}>
             <Pressable
               accessibilityLabel="Notifications"
-              onPress={() => Alert.alert('Notifications', 'Notifications are not available yet.')}
+              onPress={() => router.push('/main/notification')}
               style={styles.headerIconButton}
             >
               <MaterialIcons name="notifications-none" size={23} color={colors.primary} />
@@ -402,7 +395,7 @@ export default function ClosetScreen() {
               accessibilityRole="button"
               onPress={() => {
                 setMenuOpen(false);
-                Alert.alert('Profile', 'Jabi\njabi@clad.demo');
+                router.push('/main/profile');
               }}
               style={styles.menuItem}
             >
@@ -652,7 +645,7 @@ export default function ClosetScreen() {
               <Pressable
                 accessibilityRole="button"
                 disabled={!canSchedule}
-                onPress={() => Alert.alert('Schedule Outfit', 'Scheduling is coming soon.')}
+                onPress={() => router.navigate('/main/calendar')}
                 style={({ pressed }) => [
                   styles.scheduleBtn,
                   !canSchedule && styles.disabledBtn,
@@ -680,48 +673,7 @@ export default function ClosetScreen() {
         )}
       </ScrollView>
 
-      <SafeAreaView edges={['bottom']} style={styles.bottomSafe}>
-        <View style={styles.bottomBar}>
-          {tabs.map((tab) =>
-            tab.primary ? (
-              <View key={tab.key} style={styles.addWrap}>
-                <Pressable
-                  accessibilityLabel={tab.label}
-                  accessibilityRole="button"
-                  onPress={() => Alert.alert(tab.label, `${tab.label} is coming soon.`)}
-                  style={({ pressed }) => [styles.addButton, pressed && styles.pressedScale]}
-                >
-                  <MaterialIcons name={tab.icon} size={26} color={colors.white} />
-                </Pressable>
-              </View>
-            ) : (
-              <Pressable
-                key={tab.key}
-                accessibilityRole="button"
-                accessibilityState={{ selected: Boolean(tab.active) }}
-                onPress={() => {
-                  if (tab.active) return;
-                  if (tab.key === 'today') {
-                    router.replace('/main/dashboard');
-                    return;
-                  }
-                  Alert.alert(tab.label, `${tab.label} is coming soon.`);
-                }}
-                style={styles.tabButton}
-              >
-                <MaterialIcons
-                  name={tab.icon}
-                  size={22}
-                  color={tab.active ? colors.primary : colors.gray500}
-                />
-                <Text style={[styles.tabLabel, tab.active && styles.tabLabelActive]}>
-                  {tab.label}
-                </Text>
-              </Pressable>
-            ),
-          )}
-        </View>
-      </SafeAreaView>
+
     </View>
   );
 }

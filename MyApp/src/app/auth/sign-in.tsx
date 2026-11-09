@@ -124,7 +124,7 @@ export default function LoginScreen() {
     }
 
     setFormError(null);
-    router.replace('/main/dashboard');
+    router.replace('/main/today');
   };
 
   const showAuthUnavailable = () => {

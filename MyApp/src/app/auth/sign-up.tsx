@@ -134,7 +134,7 @@ export default function SignupScreen() {
     }
 
     setFormError(null);
-    router.replace('/main/dashboard');
+    router.replace('/main/today');
   };
 
   const showAuthUnavailable = () => {
@@ -193,7 +193,7 @@ export default function SignupScreen() {
                   onChangeText={setName}
                   onFocus={() => setNameFocused(true)}
                   onBlur={() => setNameFocused(false)}
-                  placeholder="Alex Morgan"
+                  placeholder="Enter your full name"
                   placeholderTextColor={colors.placeholder}
                   autoCapitalize="words"
                   autoComplete="name"
@@ -212,7 +212,7 @@ export default function SignupScreen() {
                   onChangeText={setEmail}
                   onFocus={() => setEmailFocused(true)}
                   onBlur={() => setEmailFocused(false)}
-                  placeholder="alex.morgan@icloud.com"
+                  placeholder="Enter your email address"
                   placeholderTextColor={colors.placeholder}
                   keyboardType="email-address"
                   autoCapitalize="none"
@@ -232,7 +232,7 @@ export default function SignupScreen() {
                   onChangeText={setPassword}
                   onFocus={() => setPassFocused(true)}
                   onBlur={() => setPassFocused(false)}
-                  placeholder="••••••••••••"
+                  placeholder="Enter your password"
                   placeholderTextColor={colors.placeholder}
                   secureTextEntry={!showPassword}
                   autoCapitalize="none"
