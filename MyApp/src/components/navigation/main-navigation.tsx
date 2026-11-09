@@ -7,6 +7,7 @@ export const mainScreens = [
   { href: '/main/today', label: 'Today', icon: 'auto-awesome' },
   { href: '/main/closet', label: 'Closet', icon: 'checkroom' },
   { href: '/main/calendar', label: 'Calendar', icon: 'calendar-today' },
+  { href: '/main/camera', label: 'Add item', icon: 'add' },
   { href: '/main/laundry', label: 'Laundry', icon: 'local-laundry-service' },
   { href: '/main/notification', label: 'Notifications', icon: 'notifications-none' },
   { href: '/main/profile', label: 'Profile', icon: 'person-outline' },
@@ -30,7 +31,11 @@ export default function MainNavigation() {
               onPress={() => { if (!selected) router.navigate(screen.href); }}
               style={({ pressed }) => [styles.button, selected && styles.selected, pressed && styles.pressed]}
             >
-              <MaterialIcons name={screen.icon} size={22} color={selected ? '#111827' : '#6b7280'} />
+              {screen.href === '/main/camera' ? (
+                <View style={styles.addCircle}><MaterialIcons name="add" size={28} color="#fff" /></View>
+              ) : (
+                <MaterialIcons name={screen.icon} size={22} color={selected ? '#111827' : '#6b7280'} />
+              )}
               <Text style={[styles.label, selected && styles.selectedLabel]}>{screen.label}</Text>
               <View style={[styles.indicator, selected && styles.activeIndicator]} />
             </Pressable>
@@ -43,6 +48,7 @@ export default function MainNavigation() {
 
 const styles = StyleSheet.create({
   container: { backgroundColor: '#fff', borderTopWidth: 1, borderTopColor: '#e5e7eb' },
+  addCircle: { width: 44, height: 44, borderRadius: 22, backgroundColor: '#111827', alignItems: 'center', justifyContent: 'center' },
   buttons: { flexGrow: 1, paddingHorizontal: 4 },
   button: { flex: 1, minWidth: 64, minHeight: 64, paddingHorizontal: 6, paddingTop: 10, paddingBottom: 6, alignItems: 'center', justifyContent: 'center', gap: 4 },
   selected: { backgroundColor: '#f3f4f6' },

@@ -2,8 +2,15 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import {
+  useFonts,
+  HankenGrotesk_400Regular,
+  HankenGrotesk_500Medium,
+  HankenGrotesk_600SemiBold,
+} from '@expo-google-fonts/hanken-grotesk';
+import { useHydrated } from '@/hooks/use-hydrated';
+import {
   Image,
-  Platform,
+  ActivityIndicator,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -72,15 +79,19 @@ const C = {
   surfaceContainerLow: "#f5f3f3",
 };
 
-const SERIF = Platform.select({ ios: "Georgia", android: "serif", default: "serif" });
+const font = {
+  regular: 'HankenGrotesk_400Regular',
+  medium: 'HankenGrotesk_500Medium',
+  semibold: 'HankenGrotesk_600SemiBold',
+} as const;
 
 const T = {
-  bodySm: { fontSize: 12, lineHeight: 16, fontWeight: "400" as const },
-  bodyMd: { fontSize: 14, lineHeight: 20, fontWeight: "400" as const },
-  bodyLg: { fontSize: 16, lineHeight: 24, fontWeight: "400" as const, letterSpacing: -0.08 },
-  labelMd: { fontSize: 12, lineHeight: 16, fontWeight: "600" as const, letterSpacing: 0.72 },
-  labelSm: { fontSize: 10, lineHeight: 14, fontWeight: "600" as const, letterSpacing: 0.8 },
-  headlineSm: { fontSize: 20, lineHeight: 28, fontWeight: "500" as const, fontFamily: SERIF },
+  bodySm: { fontSize: 12, lineHeight: 16, fontFamily: font.regular },
+  bodyMd: { fontSize: 14, lineHeight: 20, fontFamily: font.regular },
+  bodyLg: { fontSize: 16, lineHeight: 24, fontFamily: font.regular, letterSpacing: -0.08 },
+  labelMd: { fontSize: 12, lineHeight: 16, fontFamily: font.semibold, letterSpacing: 0.72 },
+  labelSm: { fontSize: 10, lineHeight: 14, fontFamily: font.semibold, letterSpacing: 0.8 },
+  headlineSm: { fontSize: 20, lineHeight: 28, fontFamily: font.semibold },
 };
 
 const shadowSm = {
@@ -150,6 +161,8 @@ function formatTime(createdAt: string, now: Date): string {
 /* --------------------------------- Screen -------------------------------- */
 
 export default function NotificationsScreen() {
+  const [fontsLoaded] = useFonts({ HankenGrotesk_400Regular, HankenGrotesk_500Medium, HankenGrotesk_600SemiBold });
+  const hasHydrated = useHydrated();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { items, markAllRead } = useNotifications();
@@ -183,6 +196,10 @@ export default function NotificationsScreen() {
   }, [items, filter]);
 
   const allRead = items.length > 0 && unreadCount === 0;
+
+  if (!hasHydrated || !fontsLoaded) {
+    return <View style={[styles.screen, styles.centered]}><ActivityIndicator color={C.onSurface} /></View>;
+  }
 
   return (
     <View style={styles.screen}>
@@ -367,7 +384,7 @@ function NotificationCard({ n, timeLabel }: { n: AppNotification; timeLabel: str
             <View style={styles.cardTitleWrap}>
               {unread && <View style={styles.unreadDot} />}
               <Text
-                style={[styles.cardTitle, { fontWeight: unread ? "600" : "500" }]}
+                style={[styles.cardTitle, { fontFamily: unread ? font.semibold : font.medium }]}
                 numberOfLines={1}
               >
                 {n.title}
@@ -494,7 +511,7 @@ const styles = StyleSheet.create({
   headerLeft: { flexDirection: "row", alignItems: "center", gap: 4 },
   headerRight: { flexDirection: "row", alignItems: "center", gap: 4 },
   iconBtn: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
-  headerTitle: { ...T.headlineSm, fontWeight: "400", letterSpacing: -0.2, color: C.onSurface },
+  headerTitle: { ...T.headlineSm, letterSpacing: -0.2, color: C.onSurface },
   markBtn: {
     minWidth: 44,
     minHeight: 44,
@@ -612,7 +629,7 @@ const styles = StyleSheet.create({
     backgroundColor: C.surfaceContainer,
   },
   highlightEyebrow: { ...T.labelSm, letterSpacing: 0.5, color: C.onSurfaceVariant },
-  highlightTitle: { ...T.bodyMd, fontWeight: "500", color: C.onSurface },
+  highlightTitle: { ...T.bodyMd, fontFamily: font.medium, color: C.onSurface },
   highlightSub: { ...T.labelSm, color: C.onSurfaceVariant },
 
   /* badge */
@@ -674,6 +691,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  prefsTitle: { ...T.bodyMd, fontWeight: "500", color: C.onSurface },
+  prefsTitle: { ...T.bodyMd, fontFamily: font.medium, color: C.onSurface },
   prefsSub: { ...T.bodySm, color: C.onSurfaceVariant },
 });
